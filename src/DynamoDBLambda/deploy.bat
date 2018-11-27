@@ -1,0 +1,1 @@
+dotnet lambda deploy-serverless -t serverless.template -sb myassetsbucketapi -sn MyAssetsApiServerless

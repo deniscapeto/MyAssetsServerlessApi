@@ -1,0 +1,160 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "AWS Serverless API that exposes the add, remove and get operations for a assets platform using Amazon DynamoDB.",
+  //"Parameters" : {
+  //  "ShouldCreateTable" : {
+  //    "Type" : "String",
+  //    "AllowedValues" : ["true", "false"],
+  //    "Description" : "If true then the DynamoDB blogging table will be created with the CloudFormation stack."
+  //  },
+  //  "BlogTableName" : {
+  //      "Type" : "String",
+  //      "Description" : "Name of DynamoDB table used to store the blog post. If left blank a new table will be created.",
+  //      "MinLength" : "0"
+  //  },
+  //  "ReadCapacity" : {
+  //      "Type" : "Number",
+  //      "Description" : "Read capacity for the DynamoDB blog table.",
+  //      "Default" : "3",
+  //      "MinValue" : 1
+  //  },
+  //  "WriteCapacity" : {
+  //      "Type" : "Number",
+  //      "Description" : "Write capacity for the DynamoDB blog table.",
+  //      "Default" : "3",
+  //      "MinValue" : 1
+  //  }
+  //},
+
+  //"Conditions" : {
+  //  "CreateBlogTable" : {"Fn::Equals" : [{"Ref" : "ShouldCreateTable"}, "true"]},
+  //  "TableNameGenerated" : {"Fn::Equals" : [{"Ref" : "BlogTableName"}, ""]}
+  //},
+ "Parameters":
+  {
+  },
+
+  "Resources": {
+
+    "GetAssetPositions": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetAssetPositionsAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Function to get a list of asset positions",
+        "MemorySize": 128,
+        "Timeout": 30,
+        "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Environment": {
+          "Variables": {
+          }
+        },
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+
+    "GetAssetPosition": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetAssetPositionAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Function to get a single assetPosition",
+        "MemorySize": 128,
+        "Timeout": 30,
+        "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Environment": {
+          "Variables": {
+          }
+        },
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{Id}",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+
+    "AddAssetPosition": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::AddAssetPositionAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Function to add a asset position",
+        "MemorySize": 128,
+        "Timeout": 30,
+        "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Environment": {
+          "Variables": {
+          }
+        },
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "PUT"
+            }
+          }
+        }
+      }
+    },
+
+    "RemoveAssetPosition": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::RemoveAssetPositionAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Function to remove a asset position",
+        "MemorySize": 128,
+        "Timeout": 30,
+        "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Environment": {
+          "Variables": {
+          }
+        },
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "DELETE"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "Outputs": {
+    //"BlogTable": {
+    //  "Value": {
+    //    "Fn::If": [
+    //      "CreateBlogTable",
+    //      { "Ref": "BlogTable" },
+    //      { "Ref": "BlogTableName" }
+    //    ]
+    //  }
+    //}
+  }
+}
