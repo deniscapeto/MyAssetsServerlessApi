@@ -44,7 +44,8 @@ namespace DynamoDBLambda.Tests
             {
                 Asset = "Itau CDB ate 2020",
                 Amount = 1000,
-                DateTime = new DateTime(2018, 11, 26)
+                DateTime = new DateTime(2018, 11, 26),
+                Custodian = "XP"
             };
 
             request = new APIGatewayProxyRequest

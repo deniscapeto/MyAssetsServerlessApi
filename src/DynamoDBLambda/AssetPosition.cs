@@ -17,5 +17,10 @@ namespace DynamoDBLambda
         /// </summary>
         public decimal AmountAdded { get; set; }
 
+        /// <summary>
+        /// The Custodian of the asset. It could be a Bank, Broker etc.
+        /// </summary>
+        public string Custodian { get; set; }
+
     }
 }
