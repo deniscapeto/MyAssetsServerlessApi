@@ -44,33 +44,41 @@ namespace DynamoDBLambda.Tests
             {
                 Asset = "Itau CDB ate 2020",
                 Amount = 1000,
-                DateTime = new DateTime(2018, 11, 26),
+                //DateTime = new DateTime(2018, 11, 26),
                 Custodian = "XP"
             };
 
+            TimePosition myTimePosition = new TimePosition() 
+            { 
+                Date = new DateTime(2018, 11, 26), 
+                AssetPositions = new List<AssetPosition>() { myAssetPosition }
+                };
+
+            
+
             request = new APIGatewayProxyRequest
             {
-                Body = JsonConvert.SerializeObject(myAssetPosition)
+                Body = JsonConvert.SerializeObject(myTimePosition)
             };
             context = new TestLambdaContext();
-            response = await functions.AddAssetPositionAsync(request, context);
+            response = await functions.AddTimePositionAsync(request, context);
             Assert.Equal(200, response.StatusCode);
 
-            var assetId = response.Body;
+            var timePositionId = response.Body;
 
             // Confirm we can get the AssetPosition post back out
             request = new APIGatewayProxyRequest
             {
-                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, assetId } }
+                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, timePositionId } }
             };
             context = new TestLambdaContext();
-            response = await functions.GetAssetPositionAsync(request, context);
+            response = await functions.GetTimePositionAsync(request, context);
             Assert.Equal(200, response.StatusCode);
 
-            AssetPosition assetPosition = JsonConvert.DeserializeObject<AssetPosition>(response.Body);
-            Assert.Equal(myAssetPosition.Asset, assetPosition.Asset);
-            Assert.Equal(myAssetPosition.Amount, assetPosition.Amount);
-            Assert.Equal(myAssetPosition.DateTime, assetPosition.DateTime);
+            TimePosition timePosition = JsonConvert.DeserializeObject<TimePosition>(response.Body);
+            Assert.Equal(myAssetPosition.Asset, timePosition.AssetPositions.FirstOrDefault().Asset);
+            Assert.Equal(myAssetPosition.Amount, timePosition.AssetPositions.FirstOrDefault().Amount);
+            Assert.Equal(myTimePosition.Date, myTimePosition.Date);
 
             // List the AssetPositions
             request = new APIGatewayProxyRequest
@@ -78,36 +86,36 @@ namespace DynamoDBLambda.Tests
                //PathParameters = new Dictionary<string, string> { { "Id", myAssetPosition.Id.ToString() } }
             };
             context = new TestLambdaContext();
-            response = await functions.GetAssetPositionsAsync(request, context);
+            response = await functions.GetTimePositionsAsync(request, context);
             Assert.Equal(200, response.StatusCode);
 
-            AssetPosition[] assetPositions = JsonConvert.DeserializeObject<AssetPosition[]>(response.Body);
+            TimePosition[] timePositions = JsonConvert.DeserializeObject<TimePosition[]>(response.Body);
             //Assert.Single(assetPositions);
 
-            var assetPos = assetPositions.Where(a => a.Id == int.Parse(assetId)).FirstOrDefault();
+            var timePos = timePositions.Where(t => t.Id == int.Parse(timePositionId)).FirstOrDefault();
 
-            Assert.NotNull(assetPos);
-            Assert.Equal(myAssetPosition.Asset, assetPos.Asset);
-            Assert.Equal(myAssetPosition.Amount, assetPos.Amount);
-            Assert.Equal(myAssetPosition.DateTime, assetPos.DateTime);
+            Assert.NotNull(timePos);
+            Assert.Equal(myAssetPosition.Asset, timePos.AssetPositions.FirstOrDefault().Asset);
+            Assert.Equal(myAssetPosition.Amount, timePos.AssetPositions.FirstOrDefault().Amount);
+            Assert.Equal(myTimePosition.Date, timePos.Date);
 
 
             // Delete the AssetPosition post
             request = new APIGatewayProxyRequest
             {
-                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, assetId } }
+                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, timePositionId } }
             };
             context = new TestLambdaContext();
-            response = await functions.RemoveAssetPositionAsync(request, context);
+            response = await functions.RemoveTimePositionAsync(request, context);
             Assert.Equal(200, response.StatusCode);
 
             // Make sure the post was deleted.
             request = new APIGatewayProxyRequest
             {
-                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, assetId } }
+                PathParameters = new Dictionary<string, string> { { Functions.ID_QUERY_STRING_NAME, timePositionId } }
             };
             context = new TestLambdaContext();
-            response = await functions.GetAssetPositionAsync(request, context);
+            response = await functions.GetTimePositionAsync(request, context);
             Assert.Equal((int)HttpStatusCode.NotFound, response.StatusCode);
         }
 

@@ -37,13 +37,13 @@
 
   "Resources": {
 
-    "GetAssetPositions": {
+    "GetTimePositions": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetAssetPositionsAsync",
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetTimePositionsAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
-        "Description": "Function to get a list of asset positions",
+        "Description": "Function to get a list of time positions",
         "MemorySize": 128,
         "Timeout": 30,
         "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
@@ -64,13 +64,13 @@
       }
     },
 
-    "GetAssetPosition": {
+    "GetTimePosition": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetAssetPositionAsync",
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetTimePositionAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
-        "Description": "Function to get a single assetPosition",
+        "Description": "Function to get a single timePosition",
         "MemorySize": 128,
         "Timeout": 30,
         "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
@@ -91,13 +91,13 @@
       }
     },
 
-    "AddAssetPosition": {
+    "AddTimePosition": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::AddAssetPositionAsync",
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::AddTimePositionAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
-        "Description": "Function to add a asset position",
+        "Description": "Function to add a time position with the asset positions inside",
         "MemorySize": 128,
         "Timeout": 30,
         "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",
@@ -118,13 +118,13 @@
       }
     },
 
-    "RemoveAssetPosition": {
+    "RemoveTimePosition": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::RemoveAssetPositionAsync",
+        "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::RemoveTimePositionAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
-        "Description": "Function to remove a asset position",
+        "Description": "Function to remove a time position",
         "MemorySize": 128,
         "Timeout": 30,
         "Role": "arn:aws:iam::193923156883:role/service-role/MyLambdaExecutionRole",

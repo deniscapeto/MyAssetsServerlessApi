@@ -22,7 +22,7 @@ namespace DynamoDBLambda
     {
         // This const is the name of the environment variable that the serverless.template will use to set
         // the name of the DynamoDB table used to store blog posts.
-        const string TABLENAME_ENVIRONMENT_VARIABLE_LOOKUP = "AssetPosition";
+        const string TABLENAME_ENVIRONMENT_VARIABLE_LOOKUP = "TimePosition";
 
         public const string ID_QUERY_STRING_NAME = "Id";
         IDynamoDBContext DDBContext { get; set; }
@@ -37,7 +37,7 @@ namespace DynamoDBLambda
             var tableName = System.Environment.GetEnvironmentVariable(TABLENAME_ENVIRONMENT_VARIABLE_LOOKUP);
             if(!string.IsNullOrEmpty(tableName))
             {
-                AWSConfigsDynamoDB.Context.TypeMappings[typeof(AssetPosition)] = new Amazon.Util.TypeMapping(typeof(AssetPosition), tableName);
+                AWSConfigsDynamoDB.Context.TypeMappings[typeof(TimePosition)] = new Amazon.Util.TypeMapping(typeof(TimePosition), tableName);
             }
 
             var config = new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 };
@@ -64,13 +64,13 @@ namespace DynamoDBLambda
         /// A Lambda function that returns back a page worth of blog posts.
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The list of blogs</returns>
-        public async Task<APIGatewayProxyResponse> GetAssetPositionsAsync(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>The list of time Positions</returns>
+        public async Task<APIGatewayProxyResponse> GetTimePositionsAsync(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine("Getting asset positions");
-            var search = this.DDBContext.ScanAsync<AssetPosition>(null);
+            context.Logger.LogLine("Getting time positions");
+            var search = this.DDBContext.ScanAsync<TimePosition>(null);
             var page = await search.GetNextSetAsync();
-            context.Logger.LogLine($"Found {page.Count} Asset positions");
+            context.Logger.LogLine($"Found {page.Count} Time positions");
 
             var response = new APIGatewayProxyResponse
             {
@@ -87,7 +87,7 @@ namespace DynamoDBLambda
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<APIGatewayProxyResponse> GetAssetPositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> GetTimePositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
         {
             string assetPositionId = null;
             if (request.PathParameters != null && request.PathParameters.ContainsKey(ID_QUERY_STRING_NAME))
@@ -104,9 +104,9 @@ namespace DynamoDBLambda
                 };
             }
 
-            context.Logger.LogLine($"Getting Asset Position {assetPositionId}");
-            var assetPosition = await DDBContext.LoadAsync<AssetPosition>(int.Parse(assetPositionId));
-            context.Logger.LogLine($"Found AssetPosition: {assetPosition != null}");
+            context.Logger.LogLine($"Getting time Position {assetPositionId}");
+            var assetPosition = await DDBContext.LoadAsync<TimePosition>(int.Parse(assetPositionId));
+            context.Logger.LogLine($"Found TimePosition: {assetPosition != null}");
 
             if (assetPosition == null)
             {
@@ -130,19 +130,19 @@ namespace DynamoDBLambda
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<APIGatewayProxyResponse> AddAssetPositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> AddTimePositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            var assetPosition = JsonConvert.DeserializeObject<AssetPosition>(request?.Body);
-            assetPosition.Id = new Random().Next();
-            assetPosition.CreatedTimestamp = DateTime.Now;
+            var timePosition = JsonConvert.DeserializeObject<TimePosition>(request?.Body);
+            timePosition.Id = new Random().Next();
+            timePosition.CreatedTimestamp = DateTime.Now;
 
-            context.Logger.LogLine($"Saving AssetPosition with id {assetPosition.Id}");
-            await DDBContext.SaveAsync<AssetPosition>(assetPosition);
+            context.Logger.LogLine($"Saving AssetPosition with id {timePosition.Id}");
+            await DDBContext.SaveAsync<TimePosition>(timePosition);
 
             var response = new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.OK,
-                Body = assetPosition.Id.ToString(),
+                Body = timePosition.Id.ToString(),
                 Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } }
             };
             return response;
@@ -152,15 +152,15 @@ namespace DynamoDBLambda
         /// A Lambda function that removes a blog post from the DynamoDB table.
         /// </summary>
         /// <param name="request"></param>
-        public async Task<APIGatewayProxyResponse> RemoveAssetPositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> RemoveTimePositionAsync(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            string assetPositionId = null;
+            string timePositionId = null;
             if (request.PathParameters != null && request.PathParameters.ContainsKey(ID_QUERY_STRING_NAME))
-                assetPositionId = request.PathParameters[ID_QUERY_STRING_NAME];
+                timePositionId = request.PathParameters[ID_QUERY_STRING_NAME];
             else if (request.QueryStringParameters != null && request.QueryStringParameters.ContainsKey(ID_QUERY_STRING_NAME))
-                assetPositionId = request.QueryStringParameters[ID_QUERY_STRING_NAME];
+                timePositionId = request.QueryStringParameters[ID_QUERY_STRING_NAME];
 
-            if (string.IsNullOrEmpty(assetPositionId))
+            if (string.IsNullOrEmpty(timePositionId))
             {
                 return new APIGatewayProxyResponse
                 {
@@ -169,8 +169,8 @@ namespace DynamoDBLambda
                 };
             }
 
-            context.Logger.LogLine($"Deleting AssetPosition with id {assetPositionId}");
-            await this.DDBContext.DeleteAsync<AssetPosition>(int.Parse(assetPositionId));
+            context.Logger.LogLine($"Deleting timePosition with id {timePositionId}");
+            await this.DDBContext.DeleteAsync<TimePosition>(int.Parse(timePositionId));
 
             return new APIGatewayProxyResponse
             {
