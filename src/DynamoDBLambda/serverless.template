@@ -41,7 +41,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetTimePositionsAsync",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "Description": "Function to get a list of time positions",
         "MemorySize": 128,
@@ -68,7 +68,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::GetTimePositionAsync",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "Description": "Function to get a single timePosition",
         "MemorySize": 128,
@@ -95,7 +95,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::AddTimePositionAsync",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "Description": "Function to add a time position with the asset positions inside",
         "MemorySize": 128,
@@ -122,7 +122,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "DynamoDBLambda::DynamoDBLambda.Functions::RemoveTimePositionAsync",
-        "Runtime": "dotnetcore2.1",
+        "Runtime": "dotnetcore3.1",
         "CodeUri": "",
         "Description": "Function to remove a time position",
         "MemorySize": 128,
